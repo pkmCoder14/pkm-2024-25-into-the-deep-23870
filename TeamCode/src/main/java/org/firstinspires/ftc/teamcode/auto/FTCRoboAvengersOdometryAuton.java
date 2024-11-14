@@ -22,10 +22,15 @@
 
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
@@ -57,7 +62,7 @@ For support, contact tech@gobilda.com
 -Ethan Doak
  */
 
-@TeleOp(name="RoboAvengers Odometry Auton", group="Robot")
+@Autonomous(name="RoboAvengers Odometry Auton", group="Robot")
 //@Disabled
 
 public class FTCRoboAvengersOdometryAuton extends LinearOpMode
@@ -66,9 +71,52 @@ public class FTCRoboAvengersOdometryAuton extends LinearOpMode
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
     double oldTime = 0;
 
+    /* Declare OpMode members. */
+    public DcMotor leftFrontDrive   = null; //the left front drivetrain motor
+    public DcMotor  rightFrontDrive  = null; //the right drivetrain motor
+    public DcMotor  leftBackDrive    = null; //the left back drivetrain motor
+    public DcMotor  rightBackDrive   = null; //the right back drivetrain motor
+    public DcMotor  armMotor         = null; //the arm motor
+
+    // Declare contants
+    final double ARM_TICKS_PER_DEGREE =
+            28 // number of encoder ticks per rotation of the bare motor
+                    * 250047.0 / 4913.0 // This is the exact gear ratio of the 50.9:1 Yellow Jacket gearbox
+                    * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
+                    * 1/360.0; // we want ticks per degree, not per rotation
+    final double ARM_COLLAPSED_INTO_ROBOT  = 0;
+    final double ARM_SCORE_SPECIMEN        = 70 * ARM_TICKS_PER_DEGREE;
+    final double ARM_CLEAR_BARRIER         = 15 * ARM_TICKS_PER_DEGREE;
+    static final double     FORWARD_SPEED = 0.1;
+    static final double     TURN_SPEED    = 0.1;
+    static final double     STRAFE_SPEED  = 0.1;
+
+    /* Variables that are used to set the arm to a specific position */
+    private ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void runOpMode()
     {
+        // Initialize the drive system variables.
+        leftFrontDrive  = hardwareMap.dcMotor.get("frontLeftMotor");
+        leftBackDrive   = hardwareMap.dcMotor.get("backLeftMotor");
+        rightFrontDrive = hardwareMap.dcMotor.get("frontRightMotor");
+        rightBackDrive  = hardwareMap.dcMotor.get("backRightMotor");
+        armMotor        = hardwareMap.get(DcMotor.class, "left_arm"); //the arm motor
+
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*This sets the maximum current that the control hub will apply to the arm before throwing a flag */
+        ((DcMotorEx) armMotor).setCurrentAlert(5, CurrentUnit.AMPS);
+
+        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -83,7 +131,8 @@ public class FTCRoboAvengersOdometryAuton extends LinearOpMode
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
-        odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        //odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -127,7 +176,30 @@ public class FTCRoboAvengersOdometryAuton extends LinearOpMode
 
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        double armPosition = (int)ARM_CLEAR_BARRIER;
+        armMotor.setPower(0.3);
+
+        while (opModeIsActive() && (runtime.seconds() < 2) )
+        {
+            armMotor.setTargetPosition((int) (armPosition));
+            ((DcMotorEx) armMotor).setVelocity(2100);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        telemetry.addData("Path to arm clearance: ", "Complete");
+        telemetry.update();
+        sleep(500);
+
+        // Step 1:  Drive forward for 3 seconds
+        leftFrontDrive.setPower(FORWARD_SPEED);
+        rightFrontDrive.setPower(FORWARD_SPEED);
+        leftBackDrive.setPower(FORWARD_SPEED);
+        rightBackDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 10) )
+        {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.addData("Status", odo.getDeviceStatus());
 
             /*
             Request an update from the Pinpoint odometry computer. This checks almost all outputs
@@ -194,5 +266,17 @@ public class FTCRoboAvengersOdometryAuton extends LinearOpMode
             telemetry.update();
 
         }
-    }}
+
+        telemetry.addData("Path to arm clearance: ", "Complete");
+        telemetry.update();
+        sleep(500);
+        runtime.reset();
+
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        armMotor.setPower(0);
+    }
+}
 
