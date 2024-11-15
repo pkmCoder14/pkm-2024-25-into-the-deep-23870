@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -66,6 +68,9 @@ public class FTCRoboAvengersTimerAuton extends LinearOpMode
     public DcMotor  leftBackDrive    = null; //the left back drivetrain motor
     public DcMotor  rightBackDrive   = null; //the right back drivetrain motor
     public DcMotor  armMotor         = null; //the arm motor
+    public DcMotor  liftMotor        = null;
+    public Servo    claw             = null; //the claw servo
+    public Servo    clawHead         = null; //the claw head servo//the slider
 
     // Declare contants
     final double ARM_TICKS_PER_DEGREE =
@@ -76,9 +81,15 @@ public class FTCRoboAvengersTimerAuton extends LinearOpMode
     final double ARM_COLLAPSED_INTO_ROBOT  = 0;
     final double ARM_SCORE_SPECIMEN        = 70 * ARM_TICKS_PER_DEGREE;
     final double ARM_CLEAR_BARRIER         = 15 * ARM_TICKS_PER_DEGREE;
-    static final double     FORWARD_SPEED = 0.5;
+    final double ARM_SCORE_HIGH_BASKET     = 95 * ARM_TICKS_PER_DEGREE;
+    final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
+    final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
+    static final double     FORWARD_SPEED = 0.35;
     static final double     TURN_SPEED    = 0.5;
     static final double     STRAFE_SPEED  = 0.5;
+    final double CLAW_OPEN   = 0.0;
+    final double CLAW_CLOSED  = 1.0;
+
 
     /* Variables that are used to set the arm to a specific position */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -91,11 +102,16 @@ public class FTCRoboAvengersTimerAuton extends LinearOpMode
         leftBackDrive   = hardwareMap.dcMotor.get("backLeftMotor");
         rightFrontDrive = hardwareMap.dcMotor.get("frontRightMotor");
         rightBackDrive  = hardwareMap.dcMotor.get("backRightMotor");
-        armMotor        = hardwareMap.get(DcMotor.class, "left_arm"); //the arm motor
+        armMotor        = hardwareMap.dcMotor.get("left_arm");
+        liftMotor       = hardwareMap.dcMotor.get("liftMotor");
+        claw  = hardwareMap.get(Servo.class, "claw");
+        clawHead = hardwareMap.get(Servo.class, "clawHead");
 
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         /*This sets the maximum current that the control hub will apply to the arm before throwing a flag */
         ((DcMotorEx) armMotor).setCurrentAlert(5, CurrentUnit.AMPS);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setTargetPosition(0);
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -109,69 +125,107 @@ public class FTCRoboAvengersTimerAuton extends LinearOpMode
 
         // Wait for the game to start (driver presses START)
         waitForStart();
+        runtime.reset();
 
-        // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
-        double armPosition = (int)ARM_CLEAR_BARRIER;
-        armMotor.setPower(0.3);
-
-        while (opModeIsActive() && (runtime.seconds() < 2) )
+        // Step 1. Claw closed
+        while (opModeIsActive() && (runtime.milliseconds() < 1000) )
         {
+            claw.setPosition(CLAW_OPEN);
+        }
+        sleep(500);
+        telemetry.addData("Step 1: Claw closed", claw.getPosition());    //
+        telemetry.update();
+        runtime.reset();
+
+        // Step 2. Lift the arm for scoring
+        double armPosition = (int)ARM_SCORE_HIGH_BASKET;
+        armMotor.setPower(0.3);
+        double liftPosition = LIFT_SCORING_IN_HIGH_BASKET;
+        liftMotor.setPower(0.3);
+        while (opModeIsActive() && (runtime.milliseconds() < 2500) )
+        {
+            claw.setPosition(CLAW_OPEN);
             armMotor.setTargetPosition((int) (armPosition));
             ((DcMotorEx) armMotor).setVelocity(2100);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        telemetry.addData("Path to arm clearance: ", "Complete");
-        telemetry.update();
-        sleep(500);
 
-        // Step 1:  Drive forward for 3 seconds
+            liftMotor.setTargetPosition((int) (liftPosition));
+            ((DcMotorEx) liftMotor).setVelocity(2100);
+            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        telemetry.addData("Step 2: Robot arm angle ready for the scoring basket: ", "Complete");
+        telemetry.update();
+        sleep(250);
+        runtime.reset();
+
+        // Step 3:  Drive forward for 1 seconds
         leftFrontDrive.setPower(FORWARD_SPEED);
         rightFrontDrive.setPower(FORWARD_SPEED);
         leftBackDrive.setPower(FORWARD_SPEED);
         rightBackDrive.setPower(FORWARD_SPEED);
         runtime.reset();
 
-        while (opModeIsActive() && (runtime.seconds() < 1.0))
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        // Step 2:  Stop
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
-        runtime.reset();
-        telemetry.addData("Path to submersible: ", "Complete");
-        telemetry.update();
-        sleep(500);
 
-        armPosition = (int)ARM_SCORE_SPECIMEN;
-        while (opModeIsActive() && (runtime.seconds() < 1.0) )
+        telemetry.addData("Step 3: Path to basket: ", "Complete");
+        telemetry.update();
+        sleep(250);
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 1.0))
         {
-            armMotor.setTargetPosition((int) (armPosition));
-            ((DcMotorEx) armMotor).setVelocity(2100);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            claw.setPosition(CLAW_CLOSED);
         }
 
-        runtime.reset();
-        telemetry.addData("Path to raise arm: ", "Complete");
+        telemetry.addData("Step 4: Sample dropped: ", "Complete");
         telemetry.update();
         sleep(500);
+        runtime.reset();
 
-        armPosition = (int)ARM_CLEAR_BARRIER;
-        while (opModeIsActive() && (runtime.seconds() < 2.0) )
+        //Step 5 Reverse back
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
-            armMotor.setTargetPosition((int) (armPosition));
-            ((DcMotorEx) armMotor).setVelocity(2100);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
         }
 
+        telemetry.addData("Step 5: Reverse back: ", "Complete");
+        telemetry.update();
+        sleep(100);
         runtime.reset();
+
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
         armMotor.setPower(0);
-        telemetry.addData("Path to collapsed arm: ", "Complete");
-        telemetry.update();
-        sleep(500);
+        liftMotor.setPower(0);
+
+
+//        armPosition = (int)ARM_CLEAR_BARRIER;
+//        while (opModeIsActive() && (runtime.seconds() < 2.0) )
+//        {
+//            armMotor.setTargetPosition((int) (armPosition));
+//            ((DcMotorEx) armMotor).setVelocity(2100);
+//            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//
+//        runtime.reset();
+//        armMotor.setPower(0);
+//        telemetry.addData("Path to collapsed arm: ", "Complete");
+//        telemetry.update();
+//        sleep(500);
     }
 }

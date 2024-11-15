@@ -232,7 +232,7 @@ public class FTCRoboAvengersOdometryAuton extends LinearOpMode
             double loopTime = newTime-oldTime;
             double frequency = 1/loopTime;
             oldTime = newTime;
-
+            
 
             /*
             gets the current Position (x & y in mm, and heading in degrees) of the robot, and prints it.
