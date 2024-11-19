@@ -154,12 +154,12 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
         If you do not have the encoder plugged into this motor, it will not run in this code. */
         armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setTargetPosition(0);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         /* Define and initialize servos.*/
         claw  = hardwareMap.get(Servo.class, "claw");
@@ -176,7 +176,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
         // Adjust the orientation parameters to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
         /* Wait for the game driver to press play */
