@@ -162,15 +162,16 @@ public class FTCRoboAvengersEncodersAuton extends LinearOpMode
 
         // Wait for the game to start (driver presses START)
         waitForStart();
+        int count = 0;
 
-        while (opModeIsActive() ) // Do not change as we require time for arm to stabilize
+        while (opModeIsActive() && count < 1 ) // Do not change as we require time for arm to stabilize
         {
             // Step 1. Claw closed
             //runtime.reset();
             claw.setPosition(CLAW_CLOSED);
             telemetry.addData("Step 1: Claw closed", claw.getPosition());
             telemetry.update();
-            sleep(200);
+            sleep(300);
 
 
             // Step 2. Lift and extend the arm for scoring
@@ -585,6 +586,7 @@ public class FTCRoboAvengersEncodersAuton extends LinearOpMode
 
             sleep(500);//[TBT] Reduced from 250 to 100
             //runtime.reset();
+            count++;
         }
 
         armMotor.setPower(0);
