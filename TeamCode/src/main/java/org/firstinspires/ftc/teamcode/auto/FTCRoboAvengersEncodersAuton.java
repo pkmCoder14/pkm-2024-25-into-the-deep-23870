@@ -86,10 +86,10 @@ public class FTCRoboAvengersEncodersAuton extends LinearOpMode
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 177.8 * LIFT_TICKS_PER_MM;
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     REVERSE_SPEED = 0.8;
-    static final double     STRAFE_SPEED  = 0.6;
+    final double LIFT_PICK_SAMPLE = 195 * LIFT_TICKS_PER_MM;
+    static final double     FORWARD_SPEED = 0.65;
+    static final double     REVERSE_SPEED = 0.9;
+    static final double     STRAFE_SPEED  = 0.65;
     final double CLAW_CLOSED = 0.0;
     final double CLAW_OPEN = 1.0;
     final double CLAW_DROP = 0.65;
@@ -104,7 +104,8 @@ public class FTCRoboAvengersEncodersAuton extends LinearOpMode
     final double WheelTurnsToBasket2 = 647.7/circumference; //Step 3
     final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
 
-    final double WheelTurnsFromBasket2 = 2540/circumference;
+    // Reduced from 2540 to 2413 that is 100in to 95in
+    final double WheelTurnsFromBasket2 = 2413/circumference;
     final int EncoderCountFromBasket2 = (int)(WheelTurnsFromBasket2 * 537.7);
 
     final double WheelStrafeRight = 952.5/circumference;
