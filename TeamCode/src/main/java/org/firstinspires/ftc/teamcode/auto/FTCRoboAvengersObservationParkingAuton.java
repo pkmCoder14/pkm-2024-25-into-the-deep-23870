@@ -85,7 +85,7 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 195 * LIFT_TICKS_PER_MM;
+    final double LIFT_PICK_SAMPLE = 170 * LIFT_TICKS_PER_MM;
     static final double     FORWARD_SPEED = 0.65;
     static final double     REVERSE_SPEED = 0.9;
     static final double     STRAFE_SPEED  = 0.65;
@@ -97,14 +97,16 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
     final double WheelTurnsToBasket = 469.9/circumference; //Step 3
     final int EncoderCountToBasket = (int)(WheelTurnsToBasket * 537.7);
 
-    final double WheelTurnsFromBasket = 622.3/circumference;
+    //Reduced from 24.5 to 23
+    final double WheelTurnsFromBasket = 584.2/circumference;
     final int EncoderCountFromBasket = (int)(WheelTurnsFromBasket * 537.7);
 
-    final double WheelTurnsToBasket2 = 647.7/circumference; //Step 3
+    //Reduced from 25.5 to 24.5
+    final double WheelTurnsToBasket2 = 622.3/circumference; //Step 3
     final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
 
-    // Reduced from 2540 to 2413 that is 100in to 95in
-    final double WheelTurnsFromBasket2 = 2413/circumference;
+    // Reduced from 2540 to 2413 that is 100in to 92in
+    final double WheelTurnsFromBasket2 = 2336.8/circumference;
     final int EncoderCountFromBasket2 = (int)(WheelTurnsFromBasket2 * 537.7);
 
     final double WheelStrafeRight = 952.5/circumference;
@@ -235,7 +237,7 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
             //runtime.reset();
 
             // Step 4 Sample drop in top basket
-            clawHead.setPosition(0.8);
+            clawHead.setPosition(0.9);
             telemetry.addData("Step 4: Claw rotated", clawHead.getPosition());
             telemetry.update();
             //sleep(100);
@@ -519,7 +521,7 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
             //runtime.reset();
 
             // Step 15 Basket drop
-            clawHead.setPosition(0.8);
+            clawHead.setPosition(0.9);
             telemetry.addData("Step 14: Set claw to middle scoring position", claw.getPosition());
             telemetry.update();
             //sleep(100); //[TBT] Reduced from 250 to 100
