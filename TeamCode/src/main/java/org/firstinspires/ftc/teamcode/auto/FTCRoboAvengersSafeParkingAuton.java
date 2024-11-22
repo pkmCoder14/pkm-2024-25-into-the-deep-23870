@@ -61,9 +61,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="RoboAvengers Submersible Parking Auton", group="Robot")
+@Autonomous(name="RoboAvengers Safe Parking Auton", group="Robot")
 //@Disabled
-public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
+public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
 {
     /* Declare OpMode members. */
     public DcMotor  leftFrontDrive   = null; //the left front drivetrain motor
@@ -84,13 +84,12 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
     final double ARM_COLLAPSED_INTO_ROBOT  = 0;
     final double ARM_CLEAR_BARRIER         = 25 * ARM_TICKS_PER_DEGREE;
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_SAMPLE_IN_LOW   = 110 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 449 * LIFT_TICKS_PER_MM;
-    static final double     FORWARD_SPEED = 0.75;
-    static final double     PARKING_SPEED = 0.9;
-    static final double     STRAFE_SPEED  = 0.75;
+    final double LIFT_PICK_SAMPLE = 195 * LIFT_TICKS_PER_MM;
+    static final double     FORWARD_SPEED = 0.65;
+    static final double     REVERSE_SPEED = 0.9;
+    static final double     STRAFE_SPEED  = 0.65;
     final double CLAW_CLOSED = 0.0;
     final double CLAW_OPEN = 1.0;
     final double CLAW_DROP = 0.65;
@@ -105,17 +104,12 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
     final double WheelTurnsToBasket2 = 647.7/circumference; //Step 3
     final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
 
-    final double WheelStrafeDiagonalParking = 1397/circumference;
-    final int EncoderCountStrafeDiagonalParking = (int)(WheelStrafeDiagonalParking * 537.7);
+    // Reduced from 2540 to 2413 that is 100in to 95in
+    final double WheelTurnsFromBasket2 = 2413/circumference;
+    final int EncoderCountFromBasket2 = (int)(WheelTurnsFromBasket2 * 537.7);
 
     final double WheelStrafeRight = 952.5/circumference;
     final int EncoderCountStrafeRight = (int)(WheelStrafeRight * 537.7);
-
-    final double WheelStrafeRightParking = 609.6/circumference;
-    final int EncoderCountStrafeRightParking = (int)(WheelStrafeRightParking * 537.7);
-
-    final double WheelReverseParking = 152.4/circumference;
-    final int EncoderCountReverseParking = (int)(WheelReverseParking * 537.7);
 
     /* Variables that are used to set the arm to a specific position */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -299,11 +293,11 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
 //            telemetry.update();
 //            sleep(100);
             armPosition = ARM_CLEAR_BARRIER;
-            liftPosition = LIFT_PICK_SAMPLE;
+            liftPosition = 0.0;
 
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.7);
+            armMotor.setPower(0.5);
             //((DcMotorEx) armMotor).setVelocity(2100);
 
             liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -372,27 +366,27 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             //runtime.reset();
 
             //Step 9: Position arm extension to collect second sample
-//            liftPosition = LIFT_PICK_SAMPLE;
-//            liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//            liftMotor.setTargetPosition((int) (liftPosition));
-//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            liftMotor.setPower(0.5);
-//            //((DcMotorEx) liftMotor).setVelocity(2100);
-//
-//            while (liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-//            {
-//                telemetry.addData("Step 9: Position arm extension to collect second sample: ", "Complete");
-//                telemetry.update();
-//            }
-//            //liftMotor.setPower(0);
-//            sleep(250);
+            liftPosition = LIFT_PICK_SAMPLE;
+            liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            liftMotor.setTargetPosition((int) (liftPosition));
+            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.5);
+            //((DcMotorEx) liftMotor).setVelocity(2100);
+
+            while (liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
+            {
+                telemetry.addData("Step 9: Position arm extension to collect second sample: ", "Complete");
+                telemetry.update();
+            }
+            //liftMotor.setPower(0);
+            sleep(250);
             //runtime.reset();
 
             // Step 10. Drop the arm for scoring second sample
             armPosition = ARM_COLLAPSED_INTO_ROBOT;
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.75);
+            armMotor.setPower(0.5);
             //((DcMotorEx) armMotor).setVelocity(2100);
 
             while ( armMotor.isBusy() ) // Do not change as we require time for arm to stabilize
@@ -415,7 +409,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             armPosition = (int)ARM_SCORE_HIGH_BASKET;
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.75);
+            armMotor.setPower(0.5);
             //((DcMotorEx) armMotor).setVelocity(2100);
 
             while ( armMotor.isBusy() ) // Do not change as we require time for arm to stabilize
@@ -538,64 +532,35 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
 
             //runtime.reset();
 
-            //Step 16 Strafe to Diagonal Parking
+            //Step 16 Reverse the robot for teleop
             leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+            leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
             leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
             rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-            rightFrontDrive.setTargetPosition(EncoderCountStrafeDiagonalParking);
-            leftBackDrive.setTargetPosition(EncoderCountStrafeDiagonalParking);
-
-            rightFrontDrive.setPower(PARKING_SPEED);
-            leftBackDrive.setPower(PARKING_SPEED);
-
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
-            {
-                telemetry.addData("Step 16: Diagonally Strafe the robot: ", "Complete");
-                telemetry.update();
-            }
-
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-
-            sleep(100);
-
-            //Step 17 Strafe to right Parking
-            leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-            leftFrontDrive.setTargetPosition(EncoderCountStrafeRightParking);
-            rightFrontDrive.setTargetPosition(EncoderCountStrafeRightParking);
-            leftBackDrive.setTargetPosition(EncoderCountStrafeRightParking);
-            rightBackDrive.setTargetPosition(EncoderCountStrafeRightParking);
+            leftFrontDrive.setTargetPosition(EncoderCountFromBasket);
+            rightFrontDrive.setTargetPosition(EncoderCountFromBasket);
+            leftBackDrive.setTargetPosition(EncoderCountFromBasket);
+            rightBackDrive.setTargetPosition(EncoderCountFromBasket);
 
             leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            leftFrontDrive.setPower(PARKING_SPEED);
-            rightFrontDrive.setPower(PARKING_SPEED);
-            leftBackDrive.setPower(PARKING_SPEED);
-            rightBackDrive.setPower(PARKING_SPEED);
+            leftFrontDrive.setPower(REVERSE_SPEED);
+            rightFrontDrive.setPower(REVERSE_SPEED);
+            leftBackDrive.setPower(REVERSE_SPEED);
+            rightBackDrive.setPower(REVERSE_SPEED);
 
             while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
             {
-                telemetry.addData("Step 17: Strafe the robot right: ", "Complete");
+                telemetry.addData("Step 16: Reverse the robot: ", "Complete");
                 telemetry.update();
             }
 
@@ -606,9 +571,19 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
 
             sleep(100);
 
+            // Step 17 Reset claw and claw Head
+            claw.setPosition(CLAW_CLOSED);
+            telemetry.addData("Step 15: Second sample dropped: ", "Complete");
+            telemetry.update();
+            sleep(100);
 
-            // Step 18. Bring arm and lift to rest on bar position
-            armPosition = ARM_SCORE_SAMPLE_IN_LOW;
+            clawHead.setPosition(0.65);
+            telemetry.addData("Step 15: Second sample dropped: ", "Complete");
+            telemetry.update();
+            sleep(250);
+
+            // Step 17. Bring arm and lift to zero position
+            armPosition = ARM_COLLAPSED_INTO_ROBOT;
             liftPosition = 0.0;
 
             liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -620,7 +595,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //((DcMotorEx) armMotor).setVelocity(2100);
-            armMotor.setPower(0.75);
+            armMotor.setPower(0.5);
 
             while (armMotor.isBusy() || liftMotor.isBusy() )
             {

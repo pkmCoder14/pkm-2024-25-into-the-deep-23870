@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.lang.Math;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -63,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @Autonomous(name="RoboAvengers Observation Parking Auton", group="Robot")
 //@Disabled
-public class FTCRoboAvengersEncodersAuton extends LinearOpMode
+public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
 {
     /* Declare OpMode members. */
     public DcMotor  leftFrontDrive   = null; //the left front drivetrain motor
