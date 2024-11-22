@@ -74,7 +74,7 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
     public Servo    claw             = null; //the claw servo
     public Servo    clawHead         = null; //the claw head servo//the slider
 
-    // Declare contants
+    // Declare constants
     final double ARM_TICKS_PER_DEGREE =
             28 // number of encoder ticks per rotation of the bare motor
                     * 250047.0 / 4913.0 // This is the exact gear ratio of the 50.9:1 Yellow Jacket gearbox
@@ -85,7 +85,7 @@ public class FTCRoboAvengersObservationParkingAuton extends LinearOpMode
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 170 * LIFT_TICKS_PER_MM;
+    final double LIFT_PICK_SAMPLE = 180 * LIFT_TICKS_PER_MM;
     static final double     FORWARD_SPEED = 0.65;
     static final double     REVERSE_SPEED = 0.9;
     static final double     STRAFE_SPEED  = 0.65;
