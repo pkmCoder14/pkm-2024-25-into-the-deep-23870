@@ -353,15 +353,15 @@ like our arm. Where we click a button and it goes to a position, then stops.
             }
             else if (gamepad2.dpad_left)
             {
-                clawHead.setPosition(0.8);
+                clawHead.setPosition(0.25);
             }
             else if (gamepad2.dpad_right)
             {
-                clawHead.setPosition(0.5);
+                clawHead.setPosition(0.6);
             }
             else if (gamepad2.dpad_up)
             {
-                clawHead.setPosition(0.65);
+                clawHead.setPosition(0.4);
             }
             /*here we check to see if the lift is trying to go higher than the maximum extension.
              *if it is, we set the variable to the max.
