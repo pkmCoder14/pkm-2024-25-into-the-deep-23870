@@ -220,7 +220,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             leftBackDrive.setPower(FORWARD_SPEED);
             rightBackDrive.setPower(FORWARD_SPEED);
 
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
+            while(leftFrontDrive.isBusy() && rightFrontDrive.isBusy() && leftBackDrive.isBusy() || rightBackDrive.isBusy())
             {
                 telemetry.addData("Step 3: Path to basket: ", "Complete");
                 telemetry.update();

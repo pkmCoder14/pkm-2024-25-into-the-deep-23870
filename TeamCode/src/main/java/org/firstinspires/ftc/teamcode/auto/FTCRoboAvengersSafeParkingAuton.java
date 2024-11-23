@@ -86,7 +86,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 180 * LIFT_TICKS_PER_MM;
+    final double LIFT_PICK_SAMPLE = 147 * LIFT_TICKS_PER_MM;
     static final double     FORWARD_SPEED = 0.65;
     static final double     REVERSE_SPEED = 0.7;
     static final double     STRAFE_SPEED  = 0.65;
@@ -103,11 +103,14 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
     final int EncoderCountFromBasket = (int)(WheelTurnsFromBasket * 537.7);
 
     //Reduced from 25.5 to 24.5
-    final double WheelTurnsToBasket2 = 622.3/circumference; //Step 3
+    final double WheelTurnsToBasket2 = 603.25/circumference; //Step 3
     final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
 
     final double WheelStrafeRight = 952.5/circumference;
     final int EncoderCountStrafeRight = (int)(WheelStrafeRight * 537.7);
+
+    final double WheelStrafeleft = 965.2/circumference;
+    final int EncoderCountStrafeleft = (int)(WheelStrafeleft * 537.7);
 
     /* Variables that are used to set the arm to a specific position */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -295,16 +298,16 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
 
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.5);
+            armMotor.setPower(0.6);
             //((DcMotorEx) armMotor).setVelocity(2100);
 
             liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             liftMotor.setTargetPosition((int) (liftPosition));
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //((DcMotorEx) liftMotor).setVelocity(2100);
-            liftMotor.setPower(0.5);
+            liftMotor.setPower(0.6);
 
-            while (armMotor.isBusy() || liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
+            while (armMotor.isBusy() && liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
             {
                 telemetry.addData("Step 6: Retract the robot arm and position for sample pickup: ", "Complete");
                 telemetry.update();
@@ -393,7 +396,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
                 telemetry.update();
             }
             //armMotor.setPower(0);
-            sleep(100);
+            sleep(500);
             //runtime.reset();
 
             // Step 10. Claw closed
@@ -407,7 +410,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             armPosition = (int)ARM_SCORE_HIGH_BASKET;
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.5);
+            armMotor.setPower(0.3);
             //((DcMotorEx) armMotor).setVelocity(2100);
 
             while ( armMotor.isBusy() ) // Do not change as we require time for arm to stabilize
@@ -430,10 +433,10 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-            leftFrontDrive.setTargetPosition(EncoderCountStrafeRight);
-            rightFrontDrive.setTargetPosition(EncoderCountStrafeRight);
-            leftBackDrive.setTargetPosition(EncoderCountStrafeRight);
-            rightBackDrive.setTargetPosition(EncoderCountStrafeRight);
+            leftFrontDrive.setTargetPosition(EncoderCountStrafeleft);
+            rightFrontDrive.setTargetPosition(EncoderCountStrafeleft);
+            leftBackDrive.setTargetPosition(EncoderCountStrafeleft);
+            rightBackDrive.setTargetPosition(EncoderCountStrafeleft);
 
             leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -521,12 +524,12 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             clawHead.setPosition(0.9);
             telemetry.addData("Step 14: Set claw to middle scoring position", claw.getPosition());
             telemetry.update();
-            //sleep(100); //[TBT] Reduced from 250 to 100
+            sleep(100); //[TBT] Reduced from 250 to 100
 
             claw.setPosition(CLAW_OPEN);
             telemetry.addData("Step 15: Second sample dropped: ", "Complete");
             telemetry.update();
-            sleep(500); //[TBT] Reduced from 250 to 100
+            sleep(250); //[TBT] Reduced from 250 to 100
 
             //runtime.reset();
 
@@ -556,7 +559,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             leftBackDrive.setPower(REVERSE_SPEED);
             rightBackDrive.setPower(REVERSE_SPEED);
 
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
+            while(leftFrontDrive.isBusy() && rightFrontDrive.isBusy() && leftBackDrive.isBusy() && rightBackDrive.isBusy())
             {
                 telemetry.addData("Step 16: Reverse the robot: ", "Complete");
                 telemetry.update();
