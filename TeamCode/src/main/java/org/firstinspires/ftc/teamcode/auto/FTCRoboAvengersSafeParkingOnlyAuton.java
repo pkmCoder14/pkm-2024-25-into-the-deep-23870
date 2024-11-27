@@ -61,9 +61,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="RoboAvengers Safe Parking Auton", group="Robot")
+@Autonomous(name="RoboAvengers Safe Parking Only Auton", group="Robot")
 //@Disabled
-public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
+public class FTCRoboAvengersSafeParkingOnlyAuton extends LinearOpMode
 {
     /* Declare OpMode members. */
     public DcMotor  leftFrontDrive   = null; //the left front drivetrain motor
@@ -86,13 +86,9 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
     final double ARM_SCORE_HIGH_BASKET     = 100 * ARM_TICKS_PER_DEGREE;
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
-    final double LIFT_PICK_SAMPLE = 160 * LIFT_TICKS_PER_MM;
-    static final double     FORWARD_SPEED = 0.65;
-    static final double     REVERSE_SPEED = 0.7;
-    static final double     STRAFE_SPEED  = 0.65;
+    static final double     FORWARD_SPEED = 0.3;
     final double CLAW_CLOSED = 0.0;
     final double CLAW_OPEN = 1.0;
-    final double CLAW_DROP = 0.65;
     //Calculate circumference of the wheel
     final double circumference = Math.PI * 104;
     final double WheelTurnsToBasket = 495.3/circumference; //Step 3
@@ -102,15 +98,8 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
     final double WheelTurnsFromBasket = 584.2/circumference;
     final int EncoderCountFromBasket = (int)(WheelTurnsFromBasket * 537.7);
 
-    //Reduced from 25.5 to 24.5
-    final double WheelTurnsToBasket2 = 603.25/circumference; //Step 3
-    final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
-
-    final double WheelStrafeRight = 952.5/circumference;
-    final int EncoderCountStrafeRight = (int)(WheelStrafeRight * 537.7);
-
-    final double WheelStrafeleft = 965.2/circumference;
-    final int EncoderCountStrafeleft = (int)(WheelStrafeleft * 537.7);
+    final double WheelTurnsFromBasket2 = 2336.8/circumference;
+    final int EncoderCountFromBasket2 = (int)(WheelTurnsFromBasket2 * 537.7);
 
     /* Variables that are used to set the arm to a specific position */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -179,7 +168,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             claw.setPosition(CLAW_CLOSED);
             telemetry.addData("Step 1: Claw closed", claw.getPosition());
             telemetry.update();
-            sleep(300);
+            sleep(500);
 
             // Step 2. Lift and extend the arm for scoring
             double armPosition = (int)ARM_SCORE_HIGH_BASKET;
@@ -188,12 +177,12 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             armMotor.setTargetPosition((int) (armPosition));
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //((DcMotorEx) armMotor).setVelocity(2100);
-            armMotor.setPower(0.5);
+            armMotor.setPower(0.4);
 
             liftMotor.setTargetPosition((int) (liftPosition));
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //((DcMotorEx) liftMotor).setVelocity(2100);
-            liftMotor.setPower(0.5);
+            liftMotor.setPower(0.4);
 
             //runtime.reset();
             while (armMotor.isBusy() || liftMotor.isBusy() )
@@ -204,7 +193,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             //armMotor.setPower(0);
             //liftMotor.setPower(0);
 
-            sleep(100); //[TBT] Reduced from 250 to 100
+            sleep(500); //[TBT] Reduced from 250 to 100
 
             // Step 3:  Drive forward towards the basket
             leftFrontDrive.setTargetPosition(EncoderCountToBasket);
@@ -233,14 +222,14 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             leftBackDrive.setPower(0);
             rightBackDrive.setPower(0);
 
-            sleep(250);
+            sleep(500);
             //runtime.reset();
 
             // Step 4 Sample drop in top basket
             clawHead.setPosition(0.9);
             telemetry.addData("Step 4: Claw rotated", clawHead.getPosition());
             telemetry.update();
-            //sleep(100);
+            sleep(500);
             runtime.reset();
             claw.setPosition(CLAW_OPEN); //[TBT] Moved outside the while loop
             telemetry.addData("Step 4: Sample dropped: ", "Complete");
@@ -259,10 +248,10 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
             rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-            leftFrontDrive.setTargetPosition(EncoderCountFromBasket);
-            rightFrontDrive.setTargetPosition(EncoderCountFromBasket);
-            leftBackDrive.setTargetPosition(EncoderCountFromBasket);
-            rightBackDrive.setTargetPosition(EncoderCountFromBasket);
+            leftFrontDrive.setTargetPosition(EncoderCountFromBasket2);
+            rightFrontDrive.setTargetPosition(EncoderCountFromBasket2);
+            leftBackDrive.setTargetPosition(EncoderCountFromBasket2);
+            rightBackDrive.setTargetPosition(EncoderCountFromBasket2);
 
             leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -285,292 +274,8 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             leftBackDrive.setPower(0);
             rightBackDrive.setPower(0);
 
-            sleep(100);
-            //runtime.reset();
-
-            // Step 6. Retract the robot arm and position for sample pickup
-//            clawHead.setPosition(0.65);
-//            telemetry.addData("Step 6: Claw centered", clawHead.getPosition());
-//            telemetry.update();
-//            sleep(100);
-            armPosition = ARM_CLEAR_BARRIER;
-            liftPosition = 0.0;
-
-            armMotor.setTargetPosition((int) (armPosition));
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.6);
-            //((DcMotorEx) armMotor).setVelocity(2100);
-
-            liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            liftMotor.setTargetPosition((int) (liftPosition));
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //((DcMotorEx) liftMotor).setVelocity(2100);
-            liftMotor.setPower(0.6);
-
-            while (armMotor.isBusy() && liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-            {
-                telemetry.addData("Step 6: Retract the robot arm and position for sample pickup: ", "Complete");
-                telemetry.update();
-            }
-
-            //armMotor.setPower(0);
-            //liftMotor.setPower(0);
-
-            sleep(100); //[TBT] Reduced from 250 to 100
-            //runtime.reset();
-
-            //Step 7 Strafe to right
-            leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-            leftFrontDrive.setTargetPosition(EncoderCountStrafeRight);
-            rightFrontDrive.setTargetPosition(EncoderCountStrafeRight);
-            leftBackDrive.setTargetPosition(EncoderCountStrafeRight);
-            rightBackDrive.setTargetPosition(EncoderCountStrafeRight);
-
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftFrontDrive.setPower(STRAFE_SPEED);
-            rightFrontDrive.setPower(STRAFE_SPEED);
-            leftBackDrive.setPower(STRAFE_SPEED);
-            rightBackDrive.setPower(STRAFE_SPEED);
-
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
-            {
-                telemetry.addData("Step 7: Strafe the robot: ", "Complete");
-                telemetry.update();
-            }
-
-            leftFrontDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            sleep(100);
-
-            // Step 8. Claw rotate for second sample pickup
-            //runtime.reset();
-            clawHead.setPosition(CLAW_CLOSED);
-            telemetry.addData("Step 8: Claw rotated", claw.getPosition());
-            telemetry.update();
-            sleep(100);
-            //runtime.reset();
-
-            //Step 9: Position arm extension to collect second sample
-            liftPosition = LIFT_PICK_SAMPLE;
-            liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            liftMotor.setTargetPosition((int) (liftPosition));
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.5);
-            //((DcMotorEx) liftMotor).setVelocity(2100);
-
-            while (liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-            {
-                telemetry.addData("Step 9: Position arm extension to collect second sample: ", "Complete");
-                telemetry.update();
-            }
-            //liftMotor.setPower(0);
-            sleep(250);
-            //runtime.reset();
-
-            // Step 10. Drop the arm for scoring second sample
-            armPosition = ARM_COLLAPSED_INTO_ROBOT;
-            armMotor.setTargetPosition((int) (armPosition));
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.5);
-            //((DcMotorEx) armMotor).setVelocity(2100);
-
-            while ( armMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-            {
-                telemetry.addData("Step 10: Lift the arm for scoring second sample: ", "Complete");
-                telemetry.update();
-            }
-            //armMotor.setPower(0);
             sleep(500);
             //runtime.reset();
-
-            // Step 10. Claw closed
-            claw.setPosition(CLAW_CLOSED);
-            telemetry.addData("Step 10: Claw closed", claw.getPosition());    //
-            telemetry.update();
-            sleep(500 );//[TBT] Reduced from 250 to 100
-            //runtime.reset();
-
-            // Step 11. Lift the arm for scoring
-            armPosition = (int)ARM_SCORE_HIGH_BASKET;
-            armMotor.setTargetPosition((int) (armPosition));
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.3);
-            //((DcMotorEx) armMotor).setVelocity(2100);
-
-            while ( armMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-            {
-                telemetry.addData("Step 11: Lift the arm for scoring: ", "Complete");
-                telemetry.update();
-            }
-            sleep(100);
-            //armMotor.setPower(0);
-            //runtime.reset();
-
-            //Step 12 Strafe to left
-            leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-            leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
-            leftFrontDrive.setTargetPosition(EncoderCountStrafeleft);
-            rightFrontDrive.setTargetPosition(EncoderCountStrafeleft);
-            leftBackDrive.setTargetPosition(EncoderCountStrafeleft);
-            rightBackDrive.setTargetPosition(EncoderCountStrafeleft);
-
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftFrontDrive.setPower(STRAFE_SPEED);
-            rightFrontDrive.setPower(STRAFE_SPEED);
-            leftBackDrive.setPower(STRAFE_SPEED);
-            rightBackDrive.setPower(STRAFE_SPEED);
-
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
-            {
-                telemetry.addData("Step 12: Strafe the robot left: ", "Complete");
-                telemetry.update();
-            }
-
-            leftFrontDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            sleep(100);
-            //runtime.reset();
-
-            // Step 13. Extend the arm for second scoring
-            liftPosition = LIFT_SCORING_IN_HIGH_BASKET;
-            liftMotor.setTargetPosition((int) (liftPosition));
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.5);
-            //((DcMotorEx) liftMotor).setVelocity(2100);
-
-            while ( liftMotor.isBusy() ) // Do not change as we require time for arm to stabilize
-            {
-                telemetry.addData("Step 13: Robot arm angle ready for the scoring basket: ", "Complete");
-                telemetry.update();
-            }
-
-            sleep(100);
-            //runtime.reset();
-
-            //liftMotor.setPower(0);
-
-            // Step 14:  Drive forward for second basket drop
-            leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-            leftFrontDrive.setTargetPosition(EncoderCountToBasket2);
-            rightFrontDrive.setTargetPosition(EncoderCountToBasket2);
-            leftBackDrive.setTargetPosition(EncoderCountToBasket2);
-            rightBackDrive.setTargetPosition(EncoderCountToBasket2);
-
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftFrontDrive.setPower(FORWARD_SPEED);
-            rightFrontDrive.setPower(FORWARD_SPEED);
-            leftBackDrive.setPower(FORWARD_SPEED);
-            rightBackDrive.setPower(FORWARD_SPEED);
-
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
-            {
-                telemetry.addData("Step 14: Path to basket: ", "Complete");
-                telemetry.update();
-            }
-
-            leftFrontDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            sleep(100);
-            //runtime.reset();
-
-            // Step 15 Basket drop
-            clawHead.setPosition(0.9);
-            telemetry.addData("Step 14: Set claw to middle scoring position", claw.getPosition());
-            telemetry.update();
-            sleep(100); //[TBT] Reduced from 250 to 100
-
-            claw.setPosition(CLAW_OPEN);
-            telemetry.addData("Step 15: Second sample dropped: ", "Complete");
-            telemetry.update();
-            sleep(500); //[TBT] Reduced from 250 to 100
-
-            //runtime.reset();
-
-            //Step 16 Reverse the robot for teleop
-            leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-            leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-            rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
-            leftFrontDrive.setTargetPosition(EncoderCountFromBasket);
-            rightFrontDrive.setTargetPosition(EncoderCountFromBasket);
-            leftBackDrive.setTargetPosition(EncoderCountFromBasket);
-            rightBackDrive.setTargetPosition(EncoderCountFromBasket);
-
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftFrontDrive.setPower(REVERSE_SPEED);
-            rightFrontDrive.setPower(REVERSE_SPEED);
-            leftBackDrive.setPower(REVERSE_SPEED);
-            rightBackDrive.setPower(REVERSE_SPEED);
-
-            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
-            {
-                telemetry.addData("Step 16: Reverse the robot: ", "Complete");
-                telemetry.update();
-            }
-
-            leftFrontDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            sleep(100);
 
             // Step 17 Reset claw and claw Head
             claw.setPosition(CLAW_CLOSED);
@@ -582,6 +287,7 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             telemetry.addData("Step 15: Second sample dropped: ", "Complete");
             telemetry.update();
             sleep(250);
+
 
             // Step 17. Bring arm and lift to zero position
             armPosition = ARM_COLLAPSED_INTO_ROBOT;
@@ -608,7 +314,6 @@ public class FTCRoboAvengersSafeParkingAuton extends LinearOpMode
             //runtime.reset();
 
             count++;
-
         }
 
         armMotor.setPower(0);

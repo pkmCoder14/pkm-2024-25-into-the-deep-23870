@@ -99,12 +99,10 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
     final double WheelTurnsToBasket = 469.9/circumference; //Step 3
     final int EncoderCountToBasket = (int)(WheelTurnsToBasket * 537.7);
 
-    //Reduced from 24.5 to 23
-    final double WheelTurnsFromBasket = 584.2/circumference;
+    final double WheelTurnsFromBasket = 622.3/circumference;
     final int EncoderCountFromBasket = (int)(WheelTurnsFromBasket * 537.7);
 
-    //Reduced from 25.5 to 24.5
-    final double WheelTurnsToBasket2 = 622.3/circumference;  //Step 3
+    final double WheelTurnsToBasket2 = 647.7/circumference; //Step 3
     final int EncoderCountToBasket2 = (int)(WheelTurnsToBasket2 * 537.7);
 
     final double WheelStrafeDiagonalParking = 1397/circumference;
@@ -166,6 +164,15 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
+        //Delete and try
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
+
         // Wait for the game to start (driver presses START)
         waitForStart();
         int count = 0;
@@ -220,7 +227,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             leftBackDrive.setPower(FORWARD_SPEED);
             rightBackDrive.setPower(FORWARD_SPEED);
 
-            while(leftFrontDrive.isBusy() && rightFrontDrive.isBusy() && leftBackDrive.isBusy() || rightBackDrive.isBusy())
+            while(leftFrontDrive.isBusy() || rightFrontDrive.isBusy() || leftBackDrive.isBusy() || rightBackDrive.isBusy())
             {
                 telemetry.addData("Step 3: Path to basket: ", "Complete");
                 telemetry.update();
@@ -235,7 +242,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             //runtime.reset();
 
             // Step 4 Sample drop in top basket
-            clawHead.setPosition(0.9);
+            clawHead.setPosition(0.8);
             telemetry.addData("Step 4: Claw rotated", clawHead.getPosition());
             telemetry.update();
             //sleep(100);
@@ -519,7 +526,7 @@ public class FTCRoboAvengersSubmersibleEncodersAuton extends LinearOpMode
             //runtime.reset();
 
             // Step 15 Basket drop
-            clawHead.setPosition(0.9);
+            clawHead.setPosition(0.8);
             telemetry.addData("Step 14: Set claw to middle scoring position", claw.getPosition());
             telemetry.update();
             //sleep(100); //[TBT] Reduced from 250 to 100
