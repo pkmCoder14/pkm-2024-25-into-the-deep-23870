@@ -251,7 +251,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
             {
                 /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
                 armPosition = ARM_SCORE_SPECIMEN;
-               // claw.setPosition(CLAW_CLOSED);
+                //claw.setPosition(CLAW_CLOSED); // commented for game
             }
             else if (gamepad1.dpad_up)
             {
