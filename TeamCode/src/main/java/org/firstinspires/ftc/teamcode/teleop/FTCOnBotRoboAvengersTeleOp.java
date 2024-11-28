@@ -81,8 +81,8 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
     final double ARM_CLEAR_BARRIER         = 15 * ARM_TICKS_PER_DEGREE;
     //[RA] Changed the angle from 76 to 70
     final double ARM_SCORE_SPECIMEN        = 70 * ARM_TICKS_PER_DEGREE;
-    //[RA] Changed the angle from 90 to 80
-    final double ARM_SCORE_SAMPLE_IN_LOW   = 110 * ARM_TICKS_PER_DEGREE;
+    //Changed angle for ARM_SCORE_SAMPLE_IN_LOW from 110 to 100
+    final double ARM_SCORE_SAMPLE_IN_LOW   = 100 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 140 * ARM_TICKS_PER_DEGREE;
     final double ARM_WINCH_ROBOT           = 10  * ARM_TICKS_PER_DEGREE;
 
