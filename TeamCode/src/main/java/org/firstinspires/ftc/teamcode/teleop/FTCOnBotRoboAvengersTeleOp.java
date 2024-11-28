@@ -298,7 +298,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
             //armMotor.setTargetPosition((int) (armPosition + armPositionFudgeFactor + armLiftComp));
             armLiftComp = 0;
             armMotor.setTargetPosition((int) (armPosition + armPositionFudgeFactor + armLiftComp));
-
+            // Test Comment 1
             ((DcMotorEx) armMotor).setVelocity(2100);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
