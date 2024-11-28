@@ -12,6 +12,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -110,9 +114,10 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
 
     double armLiftComp = 0;
 
-
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         /*
         These variables are private to the OpMode, and are used to control the drivetrain.
          */
@@ -401,12 +406,24 @@ like our arm. Where we click a button and it goes to a position, then stops.
             oldtime = looptime;
 
             /* send telemetry to the driver of the arm's current position and target position */
-            telemetry.addData("arm Target Position: ", armMotor.getTargetPosition());
-            telemetry.addData("arm Encoder: ", armMotor.getCurrentPosition());
-            telemetry.addData("lift variable", liftPosition);
-            telemetry.addData("Lift Target Position",liftMotor.getTargetPosition());
-            telemetry.addData("lift current position", liftMotor.getCurrentPosition());
-            telemetry.addData("liftMotor Current:",((DcMotorEx) liftMotor).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Left Front Motor Position: ", leftFrontDrive.getCurrentPosition());
+            telemetry.addData("Right Front Motor Position: ", rightFrontDrive.getCurrentPosition());
+            telemetry.addData("Left Back Motor Position: ", leftBackDrive.getCurrentPosition());
+            telemetry.addData("Right Back Motor Position: ", rightBackDrive.getCurrentPosition());
+
+            telemetry.addData("Left Front Motor Current:",((DcMotorEx) leftFrontDrive).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Right Front Motor Current:",((DcMotorEx) rightFrontDrive).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Left Back Motor Current:",((DcMotorEx) leftBackDrive).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Right Back Motor Current:",((DcMotorEx) rightBackDrive).getCurrent(CurrentUnit.AMPS));
+
+            telemetry.addData("Arm Target Position: ", armMotor.getTargetPosition());
+            telemetry.addData("Arm Current Position: ", armMotor.getCurrentPosition());
+            telemetry.addData("Arm Motor Current:",((DcMotorEx) armMotor).getCurrent(CurrentUnit.AMPS));
+
+            telemetry.addData("Slide Motor Current:",((DcMotorEx) liftMotor).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Slider Target Position",liftMotor.getTargetPosition());
+            telemetry.addData("Slider Current position", liftMotor.getCurrentPosition());
+
             telemetry.addData("Claw Servo position:",claw.getPosition());
             telemetry.addData("Claw Head Servo position:",clawHead.getPosition());
 
