@@ -7,6 +7,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -425,14 +426,7 @@ like our arm. Where we click a button and it goes to a position, then stops.
             telemetry.addData("Slider Current position", liftMotor.getCurrentPosition());
 
             telemetry.addData("Claw Servo position:",claw.getPosition());
-          //telemetry.addData("Claw Servo Direction: ", claw.getDirection());
             telemetry.addData("Claw Head Servo position:",clawHead.getPosition());
-          //telemetry.addData("Claw Head Servo Direction: ", clawHead.getDirection());
-
-/* Code to get current for claw and clawHead
-            telemetry.addData("Claw Servo Current:",((CRServo) claw).getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Claw Head Servo Current:",((CRServo) clawHead).getCurrent(CurrentUnit.AMPS));
- */
 
             telemetry.update();
         }
