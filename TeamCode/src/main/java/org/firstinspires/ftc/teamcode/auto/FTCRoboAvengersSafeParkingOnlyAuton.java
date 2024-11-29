@@ -322,5 +322,35 @@ public class FTCRoboAvengersSafeParkingOnlyAuton extends LinearOpMode
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
+
+        /*send telemetry data to FTC Dashboard
+        better to use target position and current position for motor position on FTC dashboard on mecanum drivetrain
+        overlap the same motors to check if there is any slippage between what you set and what is actually happening
+        better to use this if you are using timer or encoder based auton with your mecanum drivetrain*/
+        telemetry.addData("Left Front Motor Target Position: ", leftFrontDrive.getTargetPosition());
+        telemetry.addData("Right Front Motor Target Position: ", rightFrontDrive.getTargetPosition());
+        telemetry.addData("Left Back Motor Target Position: ", leftBackDrive.getTargetPosition());
+        telemetry.addData("Right Back Motor Target Position: ", rightBackDrive.getTargetPosition());
+
+        telemetry.addData("Left Front Motor Position: ", leftFrontDrive.getCurrentPosition());
+        telemetry.addData("Right Front Motor Position: ", rightFrontDrive.getCurrentPosition());
+        telemetry.addData("Left Back Motor Position: ", leftBackDrive.getCurrentPosition());
+        telemetry.addData("Right Back Motor Position: ", rightBackDrive.getCurrentPosition());
+
+        telemetry.addData("Left Front Motor Current:",((DcMotorEx) leftFrontDrive).getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right Front Motor Current:",((DcMotorEx) rightFrontDrive).getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Left Back Motor Current:",((DcMotorEx) leftBackDrive).getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right Back Motor Current:",((DcMotorEx) rightBackDrive).getCurrent(CurrentUnit.AMPS));
+
+        telemetry.addData("Arm Target Position: ", armMotor.getTargetPosition());
+        telemetry.addData("Arm Current Position: ", armMotor.getCurrentPosition());
+        telemetry.addData("Arm Motor Current:",((DcMotorEx) armMotor).getCurrent(CurrentUnit.AMPS));
+
+        telemetry.addData("Slide Motor Current:",((DcMotorEx) liftMotor).getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Slider Target Position",liftMotor.getTargetPosition());
+        telemetry.addData("Slider Current position", liftMotor.getCurrentPosition());
+
+        telemetry.addData("Claw Servo position:",claw.getPosition());
+        telemetry.addData("Claw Head Servo position:",clawHead.getPosition());
     }
 }

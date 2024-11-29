@@ -81,7 +81,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
     final double ARM_COLLECT               = 10 * ARM_TICKS_PER_DEGREE;
     final double ARM_CLEAR_BARRIER         = 15 * ARM_TICKS_PER_DEGREE;
     //[RA] Changed the angle from 76 to 70
-    final double ARM_SCORE_SPECIMEN        = 70 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_SPECIMEN        = 67 * ARM_TICKS_PER_DEGREE;
     //Changed angle for ARM_SCORE_SAMPLE_IN_LOW from 110 to 100
     final double ARM_SCORE_SAMPLE_IN_LOW   = 100 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 140 * ARM_TICKS_PER_DEGREE;
@@ -245,6 +245,13 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
                 armPosition = ARM_SCORE_SAMPLE_IN_LOW;
                 //liftPosition = LIFT_SCORING_IN_HIGH_BASKET;
             }
+
+            else if (gamepad1.y)
+            {
+                /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
+                armPosition = ARM_SCORE_SPECIMEN;
+                claw.setPosition(CLAW_CLOSED);
+            }
             else if (gamepad1.dpad_left)
             {
                 /* This turns off the intake, folds in the claw, and moves the arm
@@ -253,12 +260,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
                 liftPosition = LIFT_COLLAPSED;
                 claw.setPosition(CLAW_OPEN);
             }
-            else if (gamepad1.dpad_right)
-            {
-                /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
-                armPosition = ARM_SCORE_SPECIMEN;
-                //claw.setPosition(CLAW_CLOSED); // commented for game
-            }
+
             else if (gamepad1.dpad_up)
             {
                 /* This sets the arm to vertical to hook onto the LOW RUNG for hanging */
