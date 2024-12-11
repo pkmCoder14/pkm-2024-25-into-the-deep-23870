@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@Autonomous(name="X and Y Axis Movement", group="Auton")
-public class pkmCoder14TimerAutonTest extends LinearOpMode
+@Autonomous(name="Diagonal Strafing", group="Auton")
+public class DiagonalStrafing extends LinearOpMode
 //@Disabled
 {
     // Define Motors and Servos in OpMode
@@ -43,9 +40,11 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
     final double LIFT_SCORING_IN_SAMPLE = 145 * LIFT_TICKS_PER_MM;
    // Changing the speed you run the motors at affects the slippage
-    static final double     FORWARD_SPEED = 0.4;
-    static final double     TURN_SPEED    = 0.5;
-    static final double     STRAFE_SPEED  = 0.4;
+    static final double FORWARD_SPEED         = 0.4;
+    static final double TURN_SPEED            = 0.5;
+    static final double STRAFE_SPEED          = 0.4;
+    static final double DIAGONAL_STRAFE_SPEED = 0.4;
+    static final double ZERO_SPEED            = 0.0;
     final double CLAW_OPEN   = 0.0;
     final double CLAW_CLOSED  = 1.0;
 
@@ -93,11 +92,16 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         waitForStart();
         runtime.reset();
 
-        //Step 1: Drive forward
-        leftFrontDrive.setPower(FORWARD_SPEED);
-        rightFrontDrive.setPower(FORWARD_SPEED);
-        leftBackDrive.setPower(FORWARD_SPEED);
-        rightBackDrive.setPower(FORWARD_SPEED);
+        //Step 1: Diagonal Strafe: Top Left
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        leftFrontDrive.setPower(ZERO_SPEED);
+        leftBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        rightFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        rightBackDrive.setPower(ZERO_SPEED);
         runtime.reset();
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000)) {
@@ -116,16 +120,16 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         runtime.reset();
 
 
-        //Step 2: Strafe right
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        //Step 2: Diagonal Strafe: Top Right
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
 
-        leftFrontDrive.setPower(STRAFE_SPEED);
-        rightFrontDrive.setPower(STRAFE_SPEED);
-        leftBackDrive.setPower(STRAFE_SPEED);
-        rightBackDrive.setPower(STRAFE_SPEED);
+        leftFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        leftBackDrive.setPower(ZERO_SPEED);
+        rightFrontDrive.setPower(ZERO_SPEED);
+        rightBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
@@ -134,8 +138,8 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         }
 
         leftFrontDrive.setPower(0);
-        rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
         telemetry.addData("Step 2: Strafe right: ", "Complete");
@@ -143,16 +147,16 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         sleep(250);
         runtime.reset();
 
-        //Step 3: Drive backwards
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        //Step 3: Diagonal Strafe: Bottom Left
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
 
-        leftFrontDrive.setPower(FORWARD_SPEED);
-        rightFrontDrive.setPower(FORWARD_SPEED);
-        leftBackDrive.setPower(FORWARD_SPEED);
-        rightBackDrive.setPower(FORWARD_SPEED);
+        leftFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        leftBackDrive.setPower(ZERO_SPEED);
+        rightFrontDrive.setPower(ZERO_SPEED);
+        rightBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
@@ -170,16 +174,16 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         sleep(250);
         runtime.reset();
 
-        //Step 4: Strafe Left (Return to original position)
+        //Step 4: Diagonal Strafe: Bottom Right
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFrontDrive.setPower(STRAFE_SPEED);
-        rightFrontDrive.setPower(STRAFE_SPEED);
-        leftBackDrive.setPower(STRAFE_SPEED);
-        rightBackDrive.setPower(STRAFE_SPEED);
+        leftFrontDrive.setPower(ZERO_SPEED);
+        leftBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        rightFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        rightBackDrive.setPower(ZERO_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
