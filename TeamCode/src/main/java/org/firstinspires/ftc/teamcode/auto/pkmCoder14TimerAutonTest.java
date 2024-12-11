@@ -23,7 +23,7 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
     public DcMotor  leftBackDrive    = null; //the left back drivetrain motor
     public DcMotor  rightBackDrive   = null; //the right back drivetrain motor
     public DcMotor  armMotor         = null; //the arm motor
-    public DcMotor  slideMotor        = null; //the slider
+    public DcMotor  slideMotor       = null; //the slider
     public Servo    claw             = null; //the claw servo
     public Servo    clawHead         = null; //the claw head servo
 
@@ -42,9 +42,9 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
     final double LIFT_TICKS_PER_MM = 537.7 / 120.0;
     final double LIFT_SCORING_IN_HIGH_BASKET = 475 * LIFT_TICKS_PER_MM;
     final double LIFT_SCORING_IN_SAMPLE = 145 * LIFT_TICKS_PER_MM;
-    static final double     FORWARD_SPEED = 0.25;
+    static final double     FORWARD_SPEED = 0.4;
     static final double     TURN_SPEED    = 0.5;
-    static final double     STRAFE_SPEED  = 0.25;
+    static final double     STRAFE_SPEED  = 0.4;
     final double CLAW_OPEN   = 0.0;
     final double CLAW_CLOSED  = 1.0;
 
@@ -53,15 +53,14 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode()
-    {
-        leftFrontDrive  = hardwareMap.dcMotor.get("frontLeftMotor");
-        leftBackDrive   = hardwareMap.dcMotor.get("frontLeftMotor");
-        rightFrontDrive = hardwareMap.dcMotor.get("frontLeftMotor");
-        rightBackDrive  = hardwareMap.dcMotor.get("frontLeftMotor");
+    public void runOpMode() {
+        leftFrontDrive = hardwareMap.dcMotor.get("frontLeftMotor");
+        leftBackDrive = hardwareMap.dcMotor.get("backLeftMotor");
+        rightFrontDrive = hardwareMap.dcMotor.get("frontRightMotor");
+        rightBackDrive = hardwareMap.dcMotor.get("backRightMotor");
         armMotor = hardwareMap.dcMotor.get("armMotor");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        claw  = hardwareMap.get(Servo.class, "claw");
+        claw = hardwareMap.get(Servo.class, "claw");
         clawHead = hardwareMap.get(Servo.class, "clawHead");
 
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -100,8 +99,7 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         rightBackDrive.setPower(FORWARD_SPEED);
         runtime.reset();
 
-        while (opModeIsActive() && (runtime.milliseconds() < 750))
-        {
+        while (opModeIsActive() && (runtime.milliseconds() < 1000)) {
             telemetry.addData("Path", "Fwd Drive 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -116,9 +114,10 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         sleep(250);
         runtime.reset();
 
+
         //Step 2: Strafe right
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
@@ -127,7 +126,7 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         leftBackDrive.setPower(STRAFE_SPEED);
         rightBackDrive.setPower(STRAFE_SPEED);
 
-        while (opModeIsActive() && (runtime.milliseconds() < 750))
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
             telemetry.addData("Path", "Leg 5: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
@@ -144,8 +143,8 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         runtime.reset();
 
         //Step 3: Drive backwards
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -154,7 +153,7 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         leftBackDrive.setPower(FORWARD_SPEED);
         rightBackDrive.setPower(FORWARD_SPEED);
 
-        while (opModeIsActive() && (runtime.milliseconds() < 750))
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
             telemetry.addData("Path", "Leg 5: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
@@ -171,8 +170,8 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         runtime.reset();
 
         //Step 4: Strafe Left (Return to original position)
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -181,7 +180,7 @@ public class pkmCoder14TimerAutonTest extends LinearOpMode
         leftBackDrive.setPower(STRAFE_SPEED);
         rightBackDrive.setPower(STRAFE_SPEED);
 
-        while (opModeIsActive() && (runtime.milliseconds() < 750))
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
             telemetry.addData("Path", "Leg 5: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
