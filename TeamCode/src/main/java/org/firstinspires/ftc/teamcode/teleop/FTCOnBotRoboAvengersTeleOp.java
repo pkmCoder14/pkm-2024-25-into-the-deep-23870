@@ -44,7 +44,7 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
     public DcMotor  leftBackDrive    = null; //the left back drivetrain motor
     public DcMotor  rightBackDrive   = null; //the right back drivetrain motor
     public DcMotor  armMotor         = null; //the arm motor
-    public DcMotor  liftMotor        = null; //the slider
+    public DcMotor slideMotor        = null; //the slider
     public Servo    claw             = null; //the claw servo
     public Servo    clawHead         = null; //the claw head servo
 
@@ -132,8 +132,8 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
         leftBackDrive   = hardwareMap.dcMotor.get("backLeftMotor");
         rightFrontDrive = hardwareMap.dcMotor.get("frontRightMotor");
         rightBackDrive  = hardwareMap.dcMotor.get("backRightMotor");
-        liftMotor       = hardwareMap.dcMotor.get("liftMotor");
-        armMotor        = hardwareMap.get(DcMotor.class, "left_arm"); //the arm motor
+        slideMotor       = hardwareMap.dcMotor.get("slideMotor");
+        armMotor        = hardwareMap.get(DcMotor.class, "armMotor"); //the arm motor
 
        /* [RA] TODO - Review this setting. We need to reverse the left side of the drivetrain
           so it doesn't turn when we ask all the drive motors to go forward */
@@ -160,10 +160,10 @@ public class FTCOnBotRoboAvengersTeleOp extends LinearOpMode
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotor.setTargetPosition(0);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideMotor.setTargetPosition(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         /* Define and initialize servos.*/
         claw  = hardwareMap.get(Servo.class, "claw");
@@ -380,10 +380,10 @@ like our arm. Where we click a button and it goes to a position, then stops.
                 liftPosition = 0;
             }
 
-            liftMotor.setTargetPosition((int) (liftPosition));
+            slideMotor.setTargetPosition((int) (liftPosition));
 
-            ((DcMotorEx) liftMotor).setVelocity(2100);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ((DcMotorEx) slideMotor).setVelocity(2100);
+            slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             /* Check to see if our arm is over the current limit, and report via telemetry. */
             if (((DcMotorEx) armMotor).isOverCurrent())
@@ -419,9 +419,9 @@ like our arm. Where we click a button and it goes to a position, then stops.
             telemetry.addData("Arm Current Position: ", armMotor.getCurrentPosition());
             telemetry.addData("Arm Motor Current:",((DcMotorEx) armMotor).getCurrent(CurrentUnit.AMPS));
 
-            telemetry.addData("Slide Motor Current:",((DcMotorEx) liftMotor).getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Slider Target Position",liftMotor.getTargetPosition());
-            telemetry.addData("Slider Current position", liftMotor.getCurrentPosition());
+            telemetry.addData("Slide Motor Current:",((DcMotorEx) slideMotor).getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Slider Target Position",slideMotor.getTargetPosition());
+            telemetry.addData("Slider Current position", slideMotor.getCurrentPosition());
 
             telemetry.addData("Claw Servo position:",claw.getPosition());
             telemetry.addData("Claw Head Servo position:",clawHead.getPosition());

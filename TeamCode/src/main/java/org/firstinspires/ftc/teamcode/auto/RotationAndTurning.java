@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@Autonomous(name="Diagonal Strafing", group="DriveAuton")
-public class DiagonalStrafing extends LinearOpMode
+@Autonomous(name="Rotation and Turning", group="DriveAuton")
+public class RotationAndTurning extends LinearOpMode
 //@Disabled
 {
     // Define Motors and Servos in OpMode
@@ -92,16 +92,16 @@ public class DiagonalStrafing extends LinearOpMode
         waitForStart();
         runtime.reset();
 
-        //Step 1: Diagonal Strafe: Top Left
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        //Step 1: Rotate clockwise
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
 
-        leftFrontDrive.setPower(ZERO_SPEED);
-        leftBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
-        rightFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
-        rightBackDrive.setPower(ZERO_SPEED);
+        leftFrontDrive.setPower(TURN_SPEED);
+        leftBackDrive.setPower(TURN_SPEED);
+        rightFrontDrive.setPower(TURN_SPEED);
+        rightBackDrive.setPower(TURN_SPEED);
         runtime.reset();
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000)) {
@@ -120,16 +120,16 @@ public class DiagonalStrafing extends LinearOpMode
         runtime.reset();
 
 
-        //Step 2: Diagonal Strafe: Top Right
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        //Step 2: Rotate counterclockwise
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); ////Run
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
 
-        leftFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
-        leftBackDrive.setPower(ZERO_SPEED);
-        rightFrontDrive.setPower(ZERO_SPEED);
-        rightBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        leftFrontDrive.setPower(TURN_SPEED);
+        leftBackDrive.setPower(TURN_SPEED);
+        rightFrontDrive.setPower(TURN_SPEED);
+        rightBackDrive.setPower(TURN_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
@@ -147,16 +147,16 @@ public class DiagonalStrafing extends LinearOpMode
         sleep(250);
         runtime.reset();
 
-        //Step 3: Diagonal Strafe: Bottom Left
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        //Step 3: Rotate: Top Right
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
-        leftBackDrive.setPower(ZERO_SPEED);
+        leftFrontDrive.setPower(TURN_SPEED);
+        leftBackDrive.setPower(TURN_SPEED);
         rightFrontDrive.setPower(ZERO_SPEED);
-        rightBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        rightBackDrive.setPower(ZERO_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {
@@ -174,16 +174,71 @@ public class DiagonalStrafing extends LinearOpMode
         sleep(250);
         runtime.reset();
 
-        //Step 4: Diagonal Strafe: Bottom Right
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        //Step 4: Rotate: Bottom Right
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFrontDrive.setPower(ZERO_SPEED);
-        leftBackDrive.setPower(DIAGONAL_STRAFE_SPEED);
-        rightFrontDrive.setPower(DIAGONAL_STRAFE_SPEED);
+        leftFrontDrive.setPower(TURN_SPEED);
+        leftBackDrive.setPower(TURN_SPEED);
+        rightFrontDrive.setPower(ZERO_SPEED);
         rightBackDrive.setPower(ZERO_SPEED);
+
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
+        {
+            telemetry.addData("Path", "Leg 5: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+        telemetry.addData("Step 4: Return to original position: ", "Complete");
+        telemetry.update();
+        sleep(250);
+        runtime.reset();
+
+
+        //Step 5: Rotate: Top Left
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD); //Run
+
+        leftFrontDrive.setPower(ZERO_SPEED);
+        leftBackDrive.setPower(ZERO_SPEED);
+        rightFrontDrive.setPower(TURN_SPEED);
+        rightBackDrive.setPower(TURN_SPEED);
+
+        while (opModeIsActive() && (runtime.milliseconds() < 1000))
+        {
+            telemetry.addData("Path", "Leg 5: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+        telemetry.addData("Step 4: Return to original position: ", "Complete");
+        telemetry.update();
+        sleep(250);
+        runtime.reset();
+
+        //Step 6: Rotate: Bottom Left
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE); //Run
+
+        leftFrontDrive.setPower(ZERO_SPEED);
+        leftBackDrive.setPower(ZERO_SPEED);
+        rightFrontDrive.setPower(TURN_SPEED);
+        rightBackDrive.setPower(TURN_SPEED);
 
         while (opModeIsActive() && (runtime.milliseconds() < 1000))
         {

@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@Autonomous(name="X and Y Axis Movement", group="Auton")
+@Autonomous(name="X and Y Axis Movement", group="DriveAuton")
 public class pkmCoder14TimerAutonTest extends LinearOpMode
 //@Disabled
 {
