@@ -32,9 +32,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
  * https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html#field-centric
  */
 
-@TeleOp(name="TeleOp Pranav", group="TeleOp")
+@TeleOp(name="RoboAvengers TeleOp", group="Robot")
 //@Disabled
-public class TeleOpOffseason extends LinearOpMode
+public class FTCTeleOpSpeedControl extends LinearOpMode
 {
     /* Declare OpMode members. */
     public DcMotor  leftFrontDrive   = null; //the left front drivetrain motor
@@ -82,12 +82,6 @@ public class TeleOpOffseason extends LinearOpMode
     final double ARM_SCORE_SAMPLE_IN_LOW   = 110 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 140 * ARM_TICKS_PER_DEGREE;
     final double ARM_WINCH_ROBOT           = 10  * ARM_TICKS_PER_DEGREE;
-
-    //This will determine the speeds that the drivetrain will run at.
-
-    final double SPEED     = 0.5;
-    final double MAX_SPEED = 1;
-    final double MIN_SPEED = 0.25;
 
     /* Variables to store the positions that the claw should be set to when folding in, or folding out. */
     // Pranav made the CLAW_OPEN from 0.32 to 0.75 for custom claw
@@ -219,7 +213,6 @@ public class TeleOpOffseason extends LinearOpMode
             armPositionFudgeFactor = FUDGE_FACTOR * (gamepad2.right_trigger + (-gamepad2.left_trigger));
 
 
-
             /* Here we implement a set of if else statements to set our arm to different scoring positions.
             We check to see if a specific button is pressed, and then move the arm (and sometimes
             intake and claw) to match. For example, if we click the right bumper we want the robot
@@ -268,27 +261,8 @@ public class TeleOpOffseason extends LinearOpMode
                 armPosition = ARM_ATTACH_HANGING_HOOK;
                 claw.setPosition(CLAW_CLOSED);
             }
-            else if (gamepad1.right_bumper)
-            {
-                leftFrontDrive.setPower(MAX_SPEED);
-                leftBackDrive.setPower(MAX_SPEED);
-                rightFrontDrive.setPower(MAX_SPEED);
-                rightBackDrive.setPower(MAX_SPEED);
-            }
-            else if (gamepad1.left_bumper)
-            {
-                leftFrontDrive.setPower(MIN_SPEED);
-                leftBackDrive.setPower(MIN_SPEED);
-                rightFrontDrive.setPower(MIN_SPEED);
-                rightBackDrive.setPower(MIN_SPEED);
-            }
-            else if (gamepad1.y)
-            {
-                leftFrontDrive.setPower(SPEED);
-                leftBackDrive.setPower(SPEED);
-                rightFrontDrive.setPower(SPEED);
-                rightBackDrive.setPower(SPEED);
-            }
+
+
             /*
             This is probably my favorite piece of code on this robot. It's a clever little software
             solution to a problem the robot has.
