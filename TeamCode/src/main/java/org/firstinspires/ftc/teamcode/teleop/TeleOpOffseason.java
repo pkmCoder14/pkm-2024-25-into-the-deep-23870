@@ -85,9 +85,6 @@ public class TeleOpOffseason extends LinearOpMode
 
     //This will determine the speeds that the drivetrain will run at.
 
-    final double SPEED     = 0.5;
-    final double MAX_SPEED = 1;
-    final double MIN_SPEED = 0.25;
 
     /* Variables to store the positions that the claw should be set to when folding in, or folding out. */
     // Pranav made the CLAW_OPEN from 0.32 to 0.75 for custom claw
@@ -267,27 +264,6 @@ public class TeleOpOffseason extends LinearOpMode
                 /* This sets the arm to vertical to hook onto the LOW RUNG for hanging */
                 armPosition = ARM_ATTACH_HANGING_HOOK;
                 claw.setPosition(CLAW_CLOSED);
-            }
-            else if (gamepad1.right_bumper)
-            {
-                leftFrontDrive.setPower(MAX_SPEED);
-                leftBackDrive.setPower(MAX_SPEED);
-                rightFrontDrive.setPower(MAX_SPEED);
-                rightBackDrive.setPower(MAX_SPEED);
-            }
-            else if (gamepad1.left_bumper)
-            {
-                leftFrontDrive.setPower(MIN_SPEED);
-                leftBackDrive.setPower(MIN_SPEED);
-                rightFrontDrive.setPower(MIN_SPEED);
-                rightBackDrive.setPower(MIN_SPEED);
-            }
-            else if (gamepad1.y)
-            {
-                leftFrontDrive.setPower(SPEED);
-                leftBackDrive.setPower(SPEED);
-                rightFrontDrive.setPower(SPEED);
-                rightBackDrive.setPower(SPEED);
             }
             /*
             This is probably my favorite piece of code on this robot. It's a clever little software
